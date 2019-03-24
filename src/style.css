@@ -1,0 +1,59 @@
+body,html{
+  padding: 0px;
+  margin: 0px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.nav{
+  padding: 15px;
+  background: #10ac84;
+}
+
+button{
+  border: none;
+  color: #000;
+  border-radius: 5px;
+  font-size: 14px;
+  background: #dadfe1;
+  padding: 10px;
+  cursor: pointer;
+}
+
+button:active{
+  transform: scale(0.9);
+}
+
+.nav button{
+  margin-left: 15px;
+  border: none;
+  background: #fff;
+  color: #000;
+  width: 90px;
+  height: 40px;
+  border-radius: 5px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+
+
+li{
+  margin-top: 10px;
+}
+
+
+th{
+  text-align: left;
+}
+
+.p{
+  padding: 15px;
+}
+
+.flex{
+  display: flex;
+}
+
+.flex *{
+  margin-left: 10px;
+}
