@@ -1,58 +1,52 @@
-import React, { Component } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch,Link } from 'react-router-dom';
 import listContext from './list_context';
 import Types from './Types';
 
 
-class App extends Component {
+function App() {
 
-  constructor(props) {
-    super(props);
-    
-    this.state = { 
+    const initialState = { 
+
       list: [
         {name:'book', id:1}, {name:'laptop', id:2}, {name:'game console', id:3}, {name:'radio', id:4}
     ],
+
     cart:[],
-    addNew: this.addNew,
-    removePd: this.removePd
-     }
-  }
-  
-  render() {
+
+    addNew: addNew,
+    removePd: removePd
+    }
+    
+    const [ appstate, setState ] = useState(initialState);
+
 
     return (
-      <listContext.Provider value={this.state}>
-        <Content cartcount={this.getCartCount()}/>
+      <listContext.Provider value={appstate}>
+        <Content cartcount={getCartCount()}/>
       </listContext.Provider>
     )
     
-  }
 
   //////
 
-  getCartCount(){
+  function getCartCount(){
 
     let cnt = 0;
 
-    if(this.state.cart.length > 0){
+    if(appstate.cart.length > 0){
 
-      this.state.cart.forEach(item => {
+      appstate.cart.forEach(item => {
       cnt += item.count;
       });
-
-      return cnt;
-
-    }else{
-      return 0;
     }
-    
+    return cnt;
   }
 
   //////
 
-  addNew = (pd) => {
-    const newList = [...this.state.cart];
+  function addNew(pd){
+    let newList = appstate.cart;
 
     const newItem = {
       count:1,
@@ -71,27 +65,28 @@ class App extends Component {
       newList.push(newItem);
     }
     
-
-    this.setState({cart:newList});
+    console.log(newList);
+    setState({...appstate, cart:newList});
+    console.log(appstate);
   }
 
   //////
 
-  removePd = (indx) =>{
-    const cartList = [...this.state.cart];
+  function removePd(indx){
+    const cartList = appstate.cart;
 
     cartList.splice(indx,1);
 
-    this.setState({cart:cartList});
+    setState({...appstate, cart:cartList});
   }
 }
 
 
 ////////////////////////////////////////////////////
 
-class Content extends Component {
+function Content(props) {
   
-  render() { 
+ 
     return ( 
         <div>
           <div className='nav'>
@@ -100,29 +95,29 @@ class Content extends Component {
             </Link>
   
             <Link to='/cart'>
-              <button>{'cart('+this.props.cartcount+')'}</button>
+              <button>{'cart('+props.cartcount+')'}</button>
             </Link>
             
           </div>
   
         <Switch>
-          <Route exact path='/' component={List}/>
-          <Route path='/cart' component={Cart}/>
-          <Route path='/types' component={Types}/>
+          <Route exact path='${process.env.PUBLIC_URL}/' component={List}/>
+          <Route path='${process.env.PUBLIC_URL}/cart' component={Cart}/>
         </Switch>
         </div>
      );
-  }
+
 }
  
 /////////////////////////////////////////////////////////
 
 
-class List extends Component {
+function List(){
   
-  render() { 
-    let lst = this.context.list;
-    const pdlist = lst.map((i,index) => {
+
+    let lst = useContext(listContext);
+
+    const pdlist = lst.list.map((i,index) => {
       return <li key={index}>id:{i.id} | product name: <strong>{i.name}</strong>  <Addbutton pd={i}/></li>
     })
 
@@ -131,19 +126,19 @@ class List extends Component {
             {pdlist}
           </ul>
       );
-  }
+  
 }
-
-List.contextType = listContext;
 
 ///////////////////////////////////////////////////////
 
 
-class Cart extends Component {
+function Cart(){
 
-  render() { 
-    let crt = this.context.cart;
-    const cartlist = crt.map((i,index) => {
+    // get shopping cart array from listcontext
+
+    const { cart } = useContext(listContext);
+
+    const cartlist = cart.map((i,index) => {
       return (
       <tr key={index}>
         <td>{i.id}</td>
@@ -154,7 +149,7 @@ class Cart extends Component {
       )
     })
 
-    if(crt.length > 0){
+    if(cart.length > 0){
 
     return ( 
 
@@ -177,22 +172,18 @@ class Cart extends Component {
         } else{
           return <p className='c'>cart is empty</p>
         }
-  }
+  
 }
 
-Cart.contextType = listContext;
 
 //////////////////////////////////////////////////////
 
 function Addbutton(props){
+  const stt = useContext(listContext);
   return(
-    <listContext.Consumer>
-      {(value) => (
-          <button onClick={()=>value.addNew(props.pd)}>
+          <button onClick={()=>stt.addNew(props.pd)}>
             add to cart
-          </button>
-          )}
-          </listContext.Consumer>
+          </button>    
   )
 }
 
@@ -201,14 +192,11 @@ function Addbutton(props){
 //////////////////////////////////////////////////////
 
 function Removebutton(props){
+  const state = useContext(listContext);
   return(
-    <listContext.Consumer>
-      {(value) => (
-          <button onClick={()=>value.removePd(value.cart.indexOf(props.pd))}>
+          <button onClick={()=>state.removePd(state.cart.indexOf(props.pd))}>
             remove
           </button>
-          )}
-          </listContext.Consumer>
   )
 }
 
