@@ -66,7 +66,7 @@ function Store({children}){
         setState({...appstate, cart:cartList, cartCount:getCartCount()});
       }
 
-      ////// function to set the number of products in cart
+      ////// function to get the number of products in cart
 
       function getCartCount(){
 
