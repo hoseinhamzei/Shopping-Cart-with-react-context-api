@@ -1,7 +1,7 @@
 {
   "name": "contextt",
   "version": "0.1.0",
-  "homepage" : "https://hoseinhamzei.github.io/",
+  "homepage" : "https://hoseinhamzei.github.io/contextcart",
   "private": true,
   "dependencies": {
     "react": "^16.8.4",
